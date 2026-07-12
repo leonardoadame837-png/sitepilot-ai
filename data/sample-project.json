@@ -1,0 +1,238 @@
+{
+  "project": {
+    "id": "SP-DEMO-001",
+    "name": "Harbor Point Medical Office",
+    "client": "Harbor Point Development",
+    "location": "San Diego, California",
+    "projectType": "Commercial medical office",
+    "startDate": "2026-03-02",
+    "targetFinishDate": "2027-01-29",
+    "lastUpdated": "2026-07-11T16:30:00-07:00",
+    "health": "At risk",
+    "plannedProgress": 42,
+    "actualProgress": 34,
+    "reportingWeekStart": "2026-07-06",
+    "reportingWeekEnd": "2026-07-12"
+  },
+  "activities": [
+    {
+      "id": "A-110",
+      "name": "Level 1 slab on grade",
+      "area": "Level 1",
+      "trade": "Concrete",
+      "startDate": "2026-06-15",
+      "finishDate": "2026-06-24",
+      "plannedProgress": 100,
+      "actualProgress": 100,
+      "status": "Complete",
+      "predecessors": []
+    },
+    {
+      "id": "A-210",
+      "name": "Level 2 electrical rough-in",
+      "area": "Level 2",
+      "trade": "Electrical",
+      "startDate": "2026-06-29",
+      "finishDate": "2026-07-13",
+      "plannedProgress": 80,
+      "actualProgress": 58,
+      "status": "Behind",
+      "predecessors": ["A-110"]
+    },
+    {
+      "id": "A-220",
+      "name": "Level 2 mechanical rough-in",
+      "area": "Level 2",
+      "trade": "Mechanical",
+      "startDate": "2026-07-01",
+      "finishDate": "2026-07-15",
+      "plannedProgress": 70,
+      "actualProgress": 62,
+      "status": "At risk",
+      "predecessors": ["A-110"]
+    },
+    {
+      "id": "A-230",
+      "name": "Level 2 plumbing rough-in",
+      "area": "Level 2",
+      "trade": "Plumbing",
+      "startDate": "2026-07-02",
+      "finishDate": "2026-07-16",
+      "plannedProgress": 65,
+      "actualProgress": 63,
+      "status": "On track",
+      "predecessors": ["A-110"]
+    },
+    {
+      "id": "A-240",
+      "name": "Level 2 firestopping inspection",
+      "area": "Level 2",
+      "trade": "Electrical",
+      "startDate": "2026-07-13",
+      "finishDate": "2026-07-14",
+      "plannedProgress": 0,
+      "actualProgress": 0,
+      "status": "At risk",
+      "predecessors": ["A-210", "A-220", "A-230"]
+    },
+    {
+      "id": "A-250",
+      "name": "Level 2 drywall close-in",
+      "area": "Level 2",
+      "trade": "Drywall",
+      "startDate": "2026-07-15",
+      "finishDate": "2026-07-31",
+      "plannedProgress": 0,
+      "actualProgress": 0,
+      "status": "At risk",
+      "predecessors": ["A-240"]
+    },
+    {
+      "id": "A-310",
+      "name": "Roof membrane installation",
+      "area": "Roof",
+      "trade": "Roofing",
+      "startDate": "2026-07-08",
+      "finishDate": "2026-07-20",
+      "plannedProgress": 35,
+      "actualProgress": 30,
+      "status": "On track",
+      "predecessors": []
+    },
+    {
+      "id": "A-410",
+      "name": "Underground utility tie-in",
+      "area": "Site and utilities",
+      "trade": "Plumbing",
+      "startDate": "2026-07-10",
+      "finishDate": "2026-07-18",
+      "plannedProgress": 20,
+      "actualProgress": 5,
+      "status": "Behind",
+      "predecessors": []
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-001",
+      "type": "photo",
+      "filename": "level-2-electrical-west-corridor.jpg",
+      "observationDate": "2026-07-11",
+      "area": "Level 2",
+      "trade": "Electrical",
+      "activityId": "A-210",
+      "uploadedBy": "Demo Superintendent",
+      "note": "West corridor branch wiring remains incomplete above Rooms 220 through 226."
+    },
+    {
+      "id": "EV-002",
+      "type": "field-note",
+      "observationDate": "2026-07-11",
+      "area": "Level 2",
+      "trade": "Electrical",
+      "activityId": "A-240",
+      "uploadedBy": "Demo Project Engineer",
+      "note": "Firestopping inspection has not been requested. Electrical penetrations remain open."
+    },
+    {
+      "id": "EV-003",
+      "type": "delivery-note",
+      "observationDate": "2026-07-10",
+      "area": "Site and utilities",
+      "trade": "Plumbing",
+      "activityId": "A-410",
+      "uploadedBy": "Demo Project Engineer",
+      "note": "Backflow assembly delivery moved from July 10 to July 15."
+    }
+  ],
+  "risks": [
+    {
+      "id": "RISK-001",
+      "activityId": "A-250",
+      "title": "Drywall close-in may start before firestopping approval",
+      "area": "Level 2",
+      "trade": "Drywall",
+      "severity": "critical",
+      "likelihood": "High",
+      "scheduleImpact": "2–4 days plus possible rework",
+      "urgency": "Immediate",
+      "confidence": 94,
+      "status": "open",
+      "explanation": "Drywall is scheduled to begin July 15, but the required firestopping inspection has not been requested and predecessor rough-in work is incomplete.",
+      "evidenceIds": ["EV-001", "EV-002"]
+    },
+    {
+      "id": "RISK-002",
+      "activityId": "A-210",
+      "title": "Electrical rough-in is behind planned progress",
+      "area": "Level 2",
+      "trade": "Electrical",
+      "severity": "high",
+      "likelihood": "High",
+      "scheduleImpact": "2 days",
+      "urgency": "Today",
+      "confidence": 88,
+      "status": "open",
+      "explanation": "Electrical rough-in is 58% complete against 80% planned, with branch wiring still incomplete in the west corridor.",
+      "evidenceIds": ["EV-001"]
+    },
+    {
+      "id": "RISK-003",
+      "activityId": "A-410",
+      "title": "Utility tie-in constrained by delayed backflow assembly",
+      "area": "Site and utilities",
+      "trade": "Plumbing",
+      "severity": "medium",
+      "likelihood": "Medium",
+      "scheduleImpact": "1–3 days",
+      "urgency": "Within 48 hours",
+      "confidence": 82,
+      "status": "open",
+      "explanation": "The backflow assembly delivery moved to July 15, leaving limited float before the planned utility tie-in finish date.",
+      "evidenceIds": ["EV-003"]
+    }
+  ],
+  "actions": [
+    {
+      "id": "ACT-001",
+      "riskId": "RISK-001",
+      "action": "Hold drywall close-in in the west Level 2 corridor until rough-in and firestopping inspection are complete.",
+      "reason": "Starting drywall before approval could conceal incomplete work and create rework.",
+      "owner": "Superintendent",
+      "dueDate": "2026-07-12",
+      "priority": "critical",
+      "status": "open"
+    },
+    {
+      "id": "ACT-002",
+      "riskId": "RISK-002",
+      "action": "Meet with the electrical foreman and create a two-day recovery plan for the west corridor.",
+      "reason": "Electrical rough-in is 22 percentage points behind the current planned value.",
+      "owner": "Project Manager",
+      "dueDate": "2026-07-12",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "id": "ACT-003",
+      "riskId": "RISK-001",
+      "action": "Request the firestopping inspection and verify all penetrations before close-in.",
+      "reason": "The inspection is a required predecessor for drywall close-in.",
+      "owner": "Project Engineer",
+      "dueDate": "2026-07-13",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "id": "ACT-004",
+      "riskId": "RISK-003",
+      "action": "Confirm the backflow assembly shipment and prepare a resequencing option for the utility crew.",
+      "reason": "The delayed delivery may consume the remaining activity float.",
+      "owner": "Project Engineer",
+      "dueDate": "2026-07-13",
+      "priority": "medium",
+      "status": "open"
+    }
+  ],
+  "dailyBriefing": "The project is 8 percentage points behind plan. The highest-priority issue is the Level 2 close-in sequence: electrical rough-in remains incomplete and the firestopping inspection has not been requested. Hold drywall in the affected corridor, meet with the electrical foreman on a recovery plan, and request inspection before close-in. Also confirm the delayed backflow assembly delivery for the utility tie-in."
+}
