@@ -4,13 +4,48 @@
 
 > Help construction teams understand what is happening on-site, what is going wrong, and what action to take next.
 
-## Overview
+## Current status
 
-Construction projects often suffer from schedule delays, cost overruns, safety risks, rework, poor documentation, and disconnected communication between office and field teams.
+**Stage:** Functional dashboard prototype / MVP foundation
 
-Most project data already exists, but it is spread across drawings, schedules, RFIs, submittals, daily reports, field photos, contracts, and project-management platforms. SitePilot AI brings that information together and turns it into useful project decisions.
+The repository now includes a lightweight Node.js development server, a health endpoint, sample project data, and automated data-integrity tests. The current UI is still a frontend prototype; authentication, persistent storage, real AI inference, and production integrations are next.
 
-## Product Vision
+## Run locally or in GitHub Codespaces
+
+Requirements: Node.js 20+
+
+```bash
+npm test
+npm start
+```
+
+The server listens on port `8001` by default. In GitHub Codespaces, forward port `8001` and open the forwarded URL.
+
+Health check:
+
+```text
+/health
+```
+
+The dashboard is served from `src/`, while demo data is exposed through `/data/`.
+
+## What works today
+
+- Project health summary
+- Planned vs. actual progress
+- Schedule variance
+- Open-risk count
+- Risk severity filtering
+- Recommended actions
+- Three-week activity view
+- Daily superintendent briefing
+- Sample evidence/risk/action relationships
+- Safe DOM rendering and basic accessibility attributes
+- Refreshable project data
+- Local/Codespaces HTTP server
+- Automated data validation tests
+
+## Product vision
 
 SitePilot AI is designed to become a unified AI platform for construction project intelligence. It combines:
 
@@ -27,196 +62,179 @@ SitePilot AI is designed to become a unified AI platform for construction projec
 
 ## MVP: AI Progress + Delay Predictor
 
-The first version will let project teams upload a construction schedule, drawings, and site photos. The system will compare planned work against actual site progress and generate delay-risk alerts.
+The first production-oriented version will let project teams upload a construction schedule, drawings, and site photos. The system will compare planned work against actual site progress and generate evidence-backed delay-risk alerts.
 
-### MVP Features
+### MVP features
 
-- Upload project schedules
-- Upload drawings or BIM files
-- Upload site photos
-- Track completed work by area, trade, or activity
-- Compare planned progress with actual progress
-- Predict activities likely to delay the project
-- Generate daily action recommendations
-- Create automatic weekly owner reports
+- User authentication and role-based access control
+- Organization and project management
+- Schedule upload and activity mapping
+- Drawing/PDF and site-photo upload
+- Evidence linked to project areas and activities
+- Planned-versus-actual progress tracking
+- Delay-risk scoring with confidence and evidence
+- Daily action recommendations
+- Weekly owner reporting
+- Audit trail for important AI-generated decisions
 
-### Example
-
-A superintendent walks the jobsite and uploads photos. SitePilot AI analyzes the images and reports:
-
-> Level 3 electrical rough-in appears 80% complete. Drywall is scheduled to start tomorrow, but firestopping inspection is not complete. This creates a high rework risk. Recommended action: delay drywall in Zone B, notify the electrical subcontractor, and update the 3-week lookahead schedule.
-
-## Target Users
-
-- General contractors
-- Owners and developers
-- Project managers
-- Superintendents
-- Project engineers
-- Estimators
-- Safety managers
-- Quality-control teams
-- Subcontractors
-- Construction consultants
-
-## Core Modules
-
-### 1. AI Progress Tracker
-
-Tracks progress using photos, videos, drones, 360° cameras, or site scans. It will compare field images with drawings or BIM, identify completed or missing work, track progress by location and trade, and create visual timelines.
-
-### 2. Schedule Risk Predictor
-
-Identifies delayed activities and critical-path risks, compares planned with actual progress, recommends resequencing, and generates schedule-impact warnings.
-
-### 3. AI Estimator
-
-Extracts quantities from drawings, estimates material needs, compares estimates with historical data, flags unclear scope, and supports bid preparation.
-
-### 4. Safety AI
-
-Uses computer vision and field reports to detect missing PPE, unsafe worker-equipment proximity, fall hazards, restricted-zone entry, and safety trends.
-
-### 5. Quality Inspector
-
-Detects visible defects and incomplete work, compares installations with drawings, identifies rework risks, and tracks punch-list items.
-
-### 6. Procurement Brain
-
-Predicts shortages, monitors delivery risks, matches material needs to the schedule, tracks long-lead items, and recommends order dates.
-
-### 7. Contract Copilot
-
-Summarizes contracts, reviews RFIs and submittals, identifies change-order risks, highlights notice deadlines, and enables natural-language document search.
-
-### 8. Digital Twin Dashboard
-
-Connects schedule, cost, quality, safety, procurement, and progress data through project health scores, risk dashboards, zone maps, trade insights, and owner-ready summaries.
-
-## Roadmap
-
-### Phase 1 — Research and Product Definition
-
-Interview construction professionals, validate the highest-value pain point, define personas and data needs, study competitors, gather sample project files, and create wireframes.
-
-**Deliverables:** Product requirements document, MVP scope, user stories, competitor analysis, and initial UI wireframes.
-
-### Phase 2 — MVP Prototype
-
-Build authentication, project creation, schedule/drawing/photo uploads, a basic dashboard, manual area tagging, AI progress summaries, delay alerts, and weekly reporting.
-
-**Deliverables:** Clickable web prototype, backend API, file storage, progress-summary engine, and reporting dashboard.
-
-### Phase 3 — Computer Vision Progress Tracking
-
-Add area/trade photo classification, planned-versus-actual visual comparison, progress estimation, zone tracking, image history, and basic defect detection.
-
-### Phase 4 — Schedule Intelligence
-
-Import Primavera P6, Microsoft Project, and CSV schedules; map activities to zones; calculate planned-versus-actual performance; predict delays; identify critical-path risks; and recommend recovery actions.
-
-### Phase 5 — BIM and Drawing Integration
-
-Add IFC/BIM and PDF viewers, link photos to model locations and elements, identify incomplete scope, and support quantity tracking.
-
-### Phase 6 — Safety and Quality AI
-
-Add PPE and hazard detection, quality tagging, punch-list generation, trend dashboards, and risk reports.
-
-### Phase 7 — Procurement and Cost Risk
-
-Track deliveries and long-lead items, predict shortages, connect delivery delays to schedule impact, estimate delay costs, and alert users to budget risk.
-
-### Phase 8 — Contract and Document Intelligence
-
-Search and summarize contracts, RFIs, submittals, meeting notes, and specifications; identify deadlines and change-order risks; and generate RFI and meeting-summary drafts.
-
-### Phase 9 — Digital Twin Command Center
-
-Build real-time project health, schedule, cost, safety, and quality views; zone-based intelligence; executive reporting; and an owner portal.
-
-### Phase 10 — Operations and Maintenance Handover
-
-Extend the platform to asset records, equipment history, warranties, maintenance schedules, predictive maintenance, and facility-management integrations.
-
-## Suggested Tech Stack
+## Architecture direction
 
 ### Frontend
 
-- React and Next.js
-- Tailwind CSS
-- Map or floor-plan visualization
-- Three.js or IFC.js for BIM viewing
+The current prototype uses HTML, CSS, and vanilla JavaScript. The next UI milestone is a component-based frontend with clear separation between project data, dashboard components, and API services.
 
 ### Backend
 
-- Node.js or Python with FastAPI
+The current local server is intentionally dependency-free and exists for development. The next backend milestone is a real API with authentication, RBAC, project persistence, file metadata, audit logging, and AI job orchestration.
+
+Recommended production foundation:
+
+- Node.js or Python/FastAPI API
 - PostgreSQL
-- Redis
-- Object storage for photos, drawings, and BIM files
+- Object storage for project files
+- Redis or a managed queue for asynchronous AI jobs
 - REST or GraphQL API
 
-### AI and Machine Learning
+### AI layer
 
-- Computer vision for photo analysis
-- Large language models for document understanding
+- Computer vision for site-photo analysis
+- LLMs for project-document understanding
 - Predictive analytics for schedule and cost risk
 - OCR for drawings and scanned documents
 - Retrieval-augmented generation for project-document search
 
-### Integrations
+## Data model direction
 
-- Procore
-- Autodesk Construction Cloud
-- Primavera P6
-- Microsoft Project
-- Bluebeam
-- SharePoint
-- Google Drive
-- Drone and 360° camera platforms
-- BIM/IFC model viewers
+The demo data already establishes the core relationship between:
 
-## Key Metrics
+`Project → Activity → Evidence → Risk → Recommended Action`
+
+This relationship should remain central as the backend is introduced because it provides an explainability path from an AI recommendation back to project evidence.
+
+## Roadmap
+
+### Phase 1 — MVP foundation — in progress
+
+- Dashboard prototype
+- Sample project dataset
+- Local/Codespaces server
+- Health endpoint
+- Data-integrity tests
+- Clean repository structure
+
+### Phase 2 — Real project platform
+
+- Authentication
+- RBAC
+- Organizations and projects
+- PostgreSQL persistence
+- Secure file uploads
+- Project activity/audit history
+- API contracts
+
+### Phase 3 — AI progress intelligence
+
+- Photo ingestion
+- Computer-vision analysis
+- Area/trade classification
+- Planned-versus-actual visual comparison
+- Progress estimation
+- Evidence-backed risk generation
+
+### Phase 4 — Schedule intelligence
+
+- Primavera P6 import
+- Microsoft Project import
+- CSV schedule import
+- Critical-path analysis
+- Delay prediction
+- Recovery/resequencing recommendations
+
+### Phase 5 — Drawings and BIM
+
+- PDF drawing viewer
+- IFC/BIM integration
+- Photo-to-location linking
+- Model-element tracking
+- Quantity tracking
+
+### Phase 6 — Safety and quality
+
+- PPE/hazard detection
+- Quality tagging
+- Punch-list generation
+- Trend dashboards
+- Risk reporting
+
+### Phase 7 — Procurement and cost risk
+
+- Delivery tracking
+- Long-lead item monitoring
+- Material/schedule dependency mapping
+- Cost-impact alerts
+
+### Phase 8 — Contract and document intelligence
+
+- Contracts
+- RFIs
+- Submittals
+- Meeting notes
+- Specifications
+- Notice/deadline detection
+- Change-order risk analysis
+
+### Phase 9 — Digital twin command center
+
+- Real-time project health
+- Schedule/cost/safety/quality views
+- Zone-based intelligence
+- Executive reporting
+- Owner portal
+
+## Security and trust principles
+
+SitePilot AI should treat AI output as decision support, not as an autonomous authority over construction, safety, contractual, or financial decisions.
+
+The production system should therefore provide:
+
+- Evidence links for AI findings
+- Confidence scores
+- Human review states
+- Immutable audit events for critical actions
+- Tenant isolation
+- Least-privilege RBAC
+- Secure file handling
+- Secret management outside source control
+
+## Key metrics
 
 - Schedule accuracy
 - Progress-reporting speed
-- Delay-prediction accuracy
+- Delay-prediction precision/recall
 - Rework reduction
-- Safety-risk detection
-- Quality-issue detection
+- Safety-risk detection performance
+- Quality-issue detection performance
 - RFI response time
 - Change-order visibility
 - Owner-reporting time
 - Project-cost predictability
 
-## Competitive Advantage
+## Competitive advantage
 
-Most construction tools solve one problem at a time. SitePilot AI combines progress tracking, schedule intelligence, safety monitoring, quality control, procurement risk, document intelligence, and digital twin dashboards.
+Most construction tools solve one problem at a time. SitePilot AI is designed as a decision layer above existing construction software, connecting field evidence to schedule, risk, actions, and executive reporting.
 
-The platform is designed to become the decision-making layer above existing construction software.
-
-## Long-Term Vision
+## Long-term vision
 
 The long-term goal is an AI project manager assistant that can answer:
 
 - Is this project on schedule?
 - What work is behind?
-- Which subcontractor is creating delay risk?
+- Which activities are creating delay risk?
 - What materials need to be ordered now?
 - What safety or quality issues need immediate attention?
 - What change-order risks are developing?
 - What should the superintendent focus on tomorrow?
 - What should the owner know this week?
-
-## Current Status
-
-**Stage:** Concept / Pre-MVP
-
-**Next milestone:** Validate the MVP with construction professionals and build the first prototype.
-
-## Research Foundation
-
-This product direction is supported by construction technology trends involving AI-enabled BIM, digital twins, automated progress monitoring, schedule-risk prediction, computer vision, predictive project controls, safety and quality analytics, and lifecycle asset management.
 
 ## License
 
