@@ -6,26 +6,25 @@
 
 ## Current status
 
-**Stage:** Functional dashboard prototype / MVP foundation
+**Stage:** Functional dashboard prototype / security-foundation work
 
-The repository now includes a lightweight Node.js development server, a health endpoint, sample project data, and automated data-integrity tests. The current UI is still a frontend prototype; authentication, persistent storage, real AI inference, and production integrations are next.
+The repository includes a lightweight Node.js development server, sample project data, data-integrity tests, HTTP security regression tests, and GitHub Actions CI. The current UI remains a frontend prototype. Authentication, persistent storage, tenant isolation, secure uploads, and production integrations are not implemented.
+
+**Do not use this prototype to store confidential customer or construction project information.** See [SECURITY.md](SECURITY.md) and [the security baseline](docs/security-baseline.md).
 
 ## Run locally or in GitHub Codespaces
 
 Requirements: Node.js 20+
 
 ```bash
+npm ci
 npm test
 npm start
 ```
 
-The server listens on port `8001` by default. In GitHub Codespaces, forward port `8001` and open the forwarded URL.
+The server listens on port `8001` by default and binds to `127.0.0.1` (local machine only). In a controlled Codespaces environment, configure the host and forward port `8001` if remote access is required.
 
-Health check:
-
-```text
-/health
-```
+Health check: `/health`
 
 The dashboard is served from `src/`, while demo data is exposed through `/data/`.
 
@@ -42,199 +41,65 @@ The dashboard is served from `src/`, while demo data is exposed through `/data/`
 - Sample evidence/risk/action relationships
 - Safe DOM rendering and basic accessibility attributes
 - Refreshable project data
-- Local/Codespaces HTTP server
-- Automated data validation tests
+- Local development HTTP server
+- Data-integrity and HTTP security regression tests
+- GitHub Actions test matrix for Node.js 20 and 22
 
 ## Product vision
 
-SitePilot AI is designed to become a unified AI platform for construction project intelligence. It combines:
+SitePilot AI is designed to become a unified construction project intelligence platform. The longer-term product may include progress tracking, schedule-risk analysis, drawing/BIM analysis, field evidence, safety and quality workflows, procurement risk, document intelligence, reporting, and digital twin views.
 
-- AI progress tracking
-- Schedule-risk prediction
-- Drawing and BIM analysis
-- Site photo and video analysis
-- Safety monitoring
-- Quality-control checks
-- Procurement risk alerts
-- Contract and document intelligence
-- Automated project reporting
-- Digital twin project dashboards
+These are roadmap goals, not capabilities currently implemented in this prototype.
 
-## MVP: AI Progress + Delay Predictor
+## MVP: Progress and delay-risk workflow
 
-The first production-oriented version will let project teams upload a construction schedule, drawings, and site photos. The system will compare planned work against actual site progress and generate evidence-backed delay-risk alerts.
+The first production-oriented release should allow project teams to manage a schedule, connect field evidence to activities, confirm actual progress, and review explainable schedule risks.
 
-### MVP features
+### Required production capabilities
 
-- User authentication and role-based access control
+- Authentication and role-based access control
 - Organization and project management
-- Schedule upload and activity mapping
-- Drawing/PDF and site-photo upload
-- Evidence linked to project areas and activities
-- Planned-versus-actual progress tracking
-- Delay-risk scoring with confidence and evidence
-- Daily action recommendations
-- Weekly owner reporting
-- Audit trail for important AI-generated decisions
+- Tenant isolation
+- Schedule import and activity mapping
+- Private evidence storage and secure uploads
+- Evidence-linked progress observations
+- Human-confirmed progress
+- Explainable risk calculations
+- Audit trail for important changes and approvals
+- Backup, monitoring, and recovery procedures
 
 ## Architecture direction
 
-### Frontend
+The current prototype uses HTML, CSS, vanilla JavaScript, and a dependency-free Node.js local server. The production architecture is documented in [docs/architecture.md](docs/architecture.md).
 
-The current prototype uses HTML, CSS, and vanilla JavaScript. The next UI milestone is a component-based frontend with clear separation between project data, dashboard components, and API services.
+The recommended direction is a component-based frontend, a typed application API, PostgreSQL, private object storage, and background job processing. The exact hosting and identity-provider choices should be made before production implementation.
 
-### Backend
-
-The current local server is intentionally dependency-free and exists for development. The next backend milestone is a real API with authentication, RBAC, project persistence, file metadata, audit logging, and AI job orchestration.
-
-Recommended production foundation:
-
-- Node.js or Python/FastAPI API
-- PostgreSQL
-- Object storage for project files
-- Redis or a managed queue for asynchronous AI jobs
-- REST or GraphQL API
-
-### AI layer
-
-- Computer vision for site-photo analysis
-- LLMs for project-document understanding
-- Predictive analytics for schedule and cost risk
-- OCR for drawings and scanned documents
-- Retrieval-augmented generation for project-document search
-
-## Data model direction
-
-The demo data already establishes the core relationship between:
+## Core data relationship
 
 `Project → Activity → Evidence → Risk → Recommended Action`
 
-This relationship should remain central as the backend is introduced because it provides an explainability path from an AI recommendation back to project evidence.
-
-## Roadmap
-
-### Phase 1 — MVP foundation — in progress
-
-- Dashboard prototype
-- Sample project dataset
-- Local/Codespaces server
-- Health endpoint
-- Data-integrity tests
-- Clean repository structure
-
-### Phase 2 — Real project platform
-
-- Authentication
-- RBAC
-- Organizations and projects
-- PostgreSQL persistence
-- Secure file uploads
-- Project activity/audit history
-- API contracts
-
-### Phase 3 — AI progress intelligence
-
-- Photo ingestion
-- Computer-vision analysis
-- Area/trade classification
-- Planned-versus-actual visual comparison
-- Progress estimation
-- Evidence-backed risk generation
-
-### Phase 4 — Schedule intelligence
-
-- Primavera P6 import
-- Microsoft Project import
-- CSV schedule import
-- Critical-path analysis
-- Delay prediction
-- Recovery/resequencing recommendations
-
-### Phase 5 — Drawings and BIM
-
-- PDF drawing viewer
-- IFC/BIM integration
-- Photo-to-location linking
-- Model-element tracking
-- Quantity tracking
-
-### Phase 6 — Safety and quality
-
-- PPE/hazard detection
-- Quality tagging
-- Punch-list generation
-- Trend dashboards
-- Risk reporting
-
-### Phase 7 — Procurement and cost risk
-
-- Delivery tracking
-- Long-lead item monitoring
-- Material/schedule dependency mapping
-- Cost-impact alerts
-
-### Phase 8 — Contract and document intelligence
-
-- Contracts
-- RFIs
-- Submittals
-- Meeting notes
-- Specifications
-- Notice/deadline detection
-- Change-order risk analysis
-
-### Phase 9 — Digital twin command center
-
-- Real-time project health
-- Schedule/cost/safety/quality views
-- Zone-based intelligence
-- Executive reporting
-- Owner portal
+This relationship must remain central because it provides traceability from an operational recommendation back to the project information supporting it.
 
 ## Security and trust principles
 
-SitePilot AI should treat AI output as decision support, not as an autonomous authority over construction, safety, contractual, or financial decisions.
+- Treat AI output as decision support, not autonomous authority.
+- Require human confirmation before generated progress becomes official.
+- Enforce tenant isolation and least-privilege authorization server-side.
+- Preserve original evidence and version derived artifacts.
+- Store secrets outside source control.
+- Keep customer files private and use short-lived authorized access.
+- Record provenance, confidence, model/ruleset version, and review status.
+- Test backups and restoration.
 
-The production system should therefore provide:
+## Development sequence
 
-- Evidence links for AI findings
-- Confidence scores
-- Human review states
-- Immutable audit events for critical actions
-- Tenant isolation
-- Least-privilege RBAC
-- Secure file handling
-- Secret management outside source control
-
-## Key metrics
-
-- Schedule accuracy
-- Progress-reporting speed
-- Delay-prediction precision/recall
-- Rework reduction
-- Safety-risk detection performance
-- Quality-issue detection performance
-- RFI response time
-- Change-order visibility
-- Owner-reporting time
-- Project-cost predictability
-
-## Competitive advantage
-
-Most construction tools solve one problem at a time. SitePilot AI is designed as a decision layer above existing construction software, connecting field evidence to schedule, risk, actions, and executive reporting.
-
-## Long-term vision
-
-The long-term goal is an AI project manager assistant that can answer:
-
-- Is this project on schedule?
-- What work is behind?
-- Which activities are creating delay risk?
-- What materials need to be ordered now?
-- What safety or quality issues need immediate attention?
-- What change-order risks are developing?
-- What should the superintendent focus on tomorrow?
-- What should the owner know this week?
+1. Stabilize the existing prototype and CI.
+2. Implement identity, organization membership, and authorization.
+3. Add PostgreSQL persistence and migrations.
+4. Implement private evidence storage and audit events.
+5. Add schedule import and human-confirmed progress workflows.
+6. Introduce transparent rules-based schedule risk calculations.
+7. Add AI-assisted evidence analysis only after the data and review controls are established.
 
 ## License
 
