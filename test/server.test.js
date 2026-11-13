@@ -1,17 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createServer, resolvePublicPath } from "../server.js";
 
 test("public path resolver rejects traversal and malformed encodings", () => {
-  const root = new URL("../src/", import.meta.url).pathname;
-  assert.equal(resolvePublicPath(root, "/index.html"), resolveExpected(root, "index.html"));
+  const root = fileURLToPath(new URL("../src/", import.meta.url));
+  assert.equal(resolvePublicPath(root, "/index.html"), resolve(root, "index.html"));
   assert.equal(resolvePublicPath(root, "/%2e%2e/server.js"), null);
   assert.equal(resolvePublicPath(root, "/%E0%A4%A"), null);
 });
-
-function resolveExpected(root, file) {
-  return new URL(file, `file://${root.endsWith("/") ? root : `${root}/`}`).pathname;
-}
 
 test("HTTP server exposes health and static content with security headers", async (t) => {
   const server = createServer();
@@ -20,8 +18,7 @@ test("HTTP server exposes health and static content with security headers", asyn
     server.close((error) => error ? reject(error) : resolve());
   }));
 
-  const address = server.address();
-  const base = `http://127.0.0.1:${address.port}`;
+  const base = `http://127.0.0.1:${server.address().port}`;
 
   const health = await fetch(`${base}/health`);
   assert.equal(health.status, 200);
